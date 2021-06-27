@@ -1,0 +1,7 @@
+.nodeGridColumn {
+    display: flex;
+    justify-content: space-evenly;
+    align-content: center;
+    flex-direction: column;
+    position: static;
+}

@@ -18,7 +18,9 @@ class GraphNode extends React.Component<GraphNodeProps, GraphNodeState> {
     }
     
     render() {
-        return <span className='graphNode'><p className='nodeText'>{this.props.label}</p></span>
+        return <span className='graphNode'>
+                <p className='nodeText'>{this.props.label}</p>
+            </span>
     }
 }
 

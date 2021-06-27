@@ -1,13 +1,11 @@
 .graphNode {
-    height: 50px;
-    width: 50px;
+    height: 40px;
+    width: 40px;
     background: radial-gradient(circle, grey 45%, purple 45%);
     background-size: 375% 100%;
     background-position: right bottom;
-    transition: background-position 1s ease-in;
-    position: absolute;
-    top: 50vh;
-    left: 50%;
+    transition: background-position 0.66s ease-in;
+    position: relative;
     z-index: 1;
     border-radius: 50%;
     margin: 0px;
@@ -22,7 +20,7 @@
 
 .nodeText {
     font-size: 20px;
-    margin-top: 25%;
+    margin-top: 20%;
     color: white;
     font-weight: bolder;
 }
