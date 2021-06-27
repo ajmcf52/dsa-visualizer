@@ -2,6 +2,6 @@
     background: url('../../assets/background.png') whitesmoke;
     min-width: 100%;
     min-height: 100%;
-    position: absolute;
-    z-index: 0;
+    position: fixed;
+    z-index: -1;
 }
