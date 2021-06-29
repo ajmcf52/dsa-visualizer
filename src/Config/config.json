@@ -1,0 +1,40 @@
+{
+    "searchSettings": [
+        {
+            "label": "Start Node:",
+            "inputType": "select"
+        },
+        {
+            "label": "Goal Node:",
+            "inputType": "select"
+        },
+        {
+            "label": "Directed",
+            "inputType": "boolean"
+        },
+        {
+            "label": "Weighted",
+            "inputType": "boolean"
+        },
+        {
+            "label": "Graph Size:",
+            "inputType": "radio",
+            "options": [
+                "Small",
+                "Medium",
+                "Large"
+            ]
+        },
+        {
+            "label": "Search Style:",
+            "inputType": "radio",
+            "options": [
+                "Stepwise",
+                "Continuous"
+            ]
+        }
+    ],
+    "sortSettings": [
+
+    ]
+}
