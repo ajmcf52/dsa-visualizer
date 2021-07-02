@@ -1,7 +1,13 @@
 import React from 'react'
-import GraphNode from '../GraphNode'
+import Vertex from '../Vertex'
 
 interface EdgeProps {
-    to: GraphNode,
-    from: GraphNode
+    to: Vertex,
+    from: Vertex
 }
+
+function Edge({to, from}: EdgeProps) {
+    return <div></div>
+}
+
+export default Edge

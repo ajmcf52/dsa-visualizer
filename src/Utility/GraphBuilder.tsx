@@ -26,13 +26,13 @@ class Edge {
     }
 }
 
-interface Graph {
+export interface GraphImpl {
     adjList: Edge[][],
     vertices: Node[],
     size: number
 }
 
-class Graph {
+export class GraphImpl {
     adjList: Edge[][] = []
     vertices: Node[] = []
     size: number
@@ -75,7 +75,7 @@ export function buildGraph(size: string, directed: boolean, weighted: boolean) {
         // large graphs will contain 20 to 24 vertices
         V = Math.floor(Math.random() * 5) + 20
     }
-    let g: Graph = new Graph(V)
+    let g: GraphImpl = new GraphImpl(V)
     
     for (var i = 0; i < V; i++) {
         for (var j = 0; j < V; j++) {

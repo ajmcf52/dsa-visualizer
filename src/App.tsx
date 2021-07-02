@@ -1,16 +1,19 @@
-import React from 'react';
-import logo from './logo.svg';
 import './App.css';
-import GraphNode from './Components/Graph/GraphNode';
-import NodeGridColumn from './Components/NodeGrid/NodeGridColumn';
+import NodeGrid from './Components/NodeGrid'
 import VisualizationSpace from './Components/VisualizationSpace'
+import ReactFlow, { Elements } from 'react-flow-renderer'
+import { getGraphElements } from './Factory/GraphFactory'
 
 function App() {
-
+  let elements: Elements = getGraphElements('small', true, true).elements
   return (
     <div className="App">
       <VisualizationSpace>
-        <NodeGridColumn size={5} startingLabelCode={1}/>
+        <div style={{height: 300, width: 500}}>
+          <ReactFlow elements={elements}>
+
+          </ReactFlow>
+        </div>
       </VisualizationSpace>
     </div>
   );

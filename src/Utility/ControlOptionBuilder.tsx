@@ -1,5 +1,4 @@
 import jsonFile from '../Config/config.json'
-import React from 'react'
 import RadioButtonsGroup from '../Components/Misc/RadioButtonsGroup'
 import NodeSelect from '../Components/Misc/NodeSelect'
 import { Checkbox, FormControlLabel} from '@material-ui/core'
