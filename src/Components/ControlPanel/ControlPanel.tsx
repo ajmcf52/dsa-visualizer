@@ -1,3 +1,5 @@
+import "./ControlPanel.css"
+import TabControl from './TabControl'
 
 interface ControlPanelProps {
     algorithms: {
@@ -18,8 +20,11 @@ interface ControlPanelProps {
     }
 }
 
-function ControlPanel ({controlSettings} : ControlPanelProps) {
-
+function ControlPanel () {
+    return <div className='controlContainer'>
+        <div className='controlPanel'></div>
+        <TabControl />
+    </div>
 }
 
 export default ControlPanel;
