@@ -1,12 +1,12 @@
 .tabRow {
     text-align: center;
     list-style: none;
-    margin: 0;
+    margin: 0 0 0 40px;
+    float: left;
     padding: 0;
     line-height: 33px;
     height: 37px;
     position: relative;
-    overflow: hidden;
 }
 
 .tabRow li {

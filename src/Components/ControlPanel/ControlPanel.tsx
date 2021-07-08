@@ -22,7 +22,9 @@ interface ControlPanelProps {
 
 function ControlPanel () {
     return <div className='controlContainer'>
-        <div className='controlPanel'></div>
+        <div className='controlPanel'>
+
+        </div>
         <TabControl />
     </div>
 }

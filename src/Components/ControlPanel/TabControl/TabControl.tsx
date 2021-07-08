@@ -1,7 +1,6 @@
 import './TabControl.css'
 import React from 'react'
 import  { connect } from 'react-redux'
-import { PayloadAction } from '@reduxjs/toolkit'
 import { TabClickEventCreator } from '../../../Actions/TabClickEvent'
 import { RootState } from '../../../store'
 
