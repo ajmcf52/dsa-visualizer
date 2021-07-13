@@ -1,0 +1,17 @@
+.customNode {
+    height: 40px;
+    width: 40px;
+    position: relative;
+    border-radius: 50%;
+    margin: 0px;
+    justify-content: center;
+    vertical-align: middle;
+    border: 3px solid black;
+}
+
+.nodeText {
+    font-size: 20px;
+    margin-top: 20%;
+    color: white;
+    font-weight: bolder;
+}
