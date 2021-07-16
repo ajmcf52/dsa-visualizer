@@ -1,5 +1,5 @@
 import Graph from '../Components/Graph'
-import { Elements, Edge, Node, FlowElement, ArrowHeadType } from 'react-flow-renderer'
+import { Elements, Edge, Node, FlowElement, ArrowHeadType, Position } from 'react-flow-renderer'
 import { NodeWidth, GridDimensions, AsciiA, NodeOffset, EdgeFactor } from '../Constants'
 
 interface AdjacencyMap {
@@ -50,14 +50,17 @@ export const buildAdjacencyMap = (size: string, weighted: boolean, directed: boo
     }
     for (i = 0; i < V; i++) {
         for (var j = 0; j < V; j++) {
-            if (i === j)
-                continue // don't want nodes with edges pointing to themselves
+            if (i === j) // don't want nodes with edges pointing to themselves
+                continue
             let roll = Math.random()
             if (roll <= EdgeFactor) {
                 let weight = weighted ? generateWeight(V) : 1
                 let from = String.fromCharCode(i + AsciiA),
                 to = String.fromCharCode(j + AsciiA)
                 adjMap.edgeLists.get(from)!.push({to: to, weight: weight})
+                if (!directed) { // if not directed, edge should be two-way
+                    adjMap.edgeLists.get(to)!.push({to: from, weight: weight})
+                }
             }
         }
     }
@@ -65,8 +68,13 @@ export const buildAdjacencyMap = (size: string, weighted: boolean, directed: boo
     return adjMap
 }
 
+interface XYPosition {
+    x: number,
+    y: number
+}
+
 interface PositionMap {
-    positions: Map<string, {x: number, y: number}>
+    positions: Map<string, XYPosition>
 }
 
 /**
@@ -95,6 +103,74 @@ export const buildPositionMap = (adjMap: AdjacencyMap) => {
         }
     }
     return pMap
+}
+
+interface EdgeAnchorList {
+    anchors: string[]
+}
+
+const edgeDescriptorMappings = {
+    'left': 'l',
+    'right': 'r',
+    'top': 't',
+    'bottom': 'b'
+}
+
+/**
+ * helper function for generating edge labels.
+ * 
+ * @param toID the 'to' vertex ID string
+ * @param fromID 'from' vertex ID string
+ * @param toPos 'to' vertex position enum
+ * @param fromPos 'from' vertex position enum
+ * @returns a string describing the edge connecting said vertices.
+ */
+const getEdgeDescriptor = (toID: string, fromID: string, toPos: Position, fromPos: Position) => {
+    let toPosDescriptor = edgeDescriptorMappings[toPos],
+    fromPosDescriptor = edgeDescriptorMappings[fromPos]
+    return `${toID}${toPosDescriptor}-${fromID}${fromPosDescriptor}`
+}
+
+/**
+ * factory method for generating a list of edge labels for a given graph. These labels conveniently 
+ * describe which positional anchors will be used on either side of an edge as well.
+ * @param adjMap adjacency map of our graph
+ * @param pMap position mappings of the vertices
+ * @returns a list of edge labels describing their to/from anchor positions
+ */
+export const generateEdgeAnchors = (adjMap: AdjacencyMap, pMap: PositionMap) => {
+    let edgeAnchors: EdgeAnchorList = {
+        anchors: []
+    }
+    adjMap.edgeLists.forEach((value: {to: string, weight: number}[], key: string) => {
+        value.forEach((value: {to: string, weight: number}) => {
+            let from: XYPosition = pMap.positions.get(key)!
+            let to: XYPosition = pMap.positions.get(value.to)!
+            let xDiff = from.x - to.x,
+            yDiff = from.y - to.y
+
+            let edgeDescriptor = ''
+            if (Math.abs(yDiff) <= Math.abs(xDiff)) { // use left and right anchorings of the nodes
+                if (xDiff < 0) { // occurs when the "from" node is left of the "to" node
+                    edgeDescriptor = getEdgeDescriptor(value.to, key, Position.Left, Position.Right)
+                }
+                else {
+                    edgeDescriptor = getEdgeDescriptor(value.to, key, Position.Right, Position.Left)
+                }
+            }
+            else { // use top and bottom anchorings of the nodes
+                if (yDiff < 0) { // occurs when the 'from' node is above the 'to' node
+                    edgeDescriptor = getEdgeDescriptor(value.to, key, Position.Top, Position.Bottom)
+                }
+                else {
+                    edgeDescriptor = getEdgeDescriptor(value.to, key, Position.Bottom, Position.Top)
+                }
+            }
+            edgeAnchors.anchors.push(edgeDescriptor)
+        })
+    })
+
+    return edgeAnchors
 }
 
 export const getGraphElements = (size: string, weighted: boolean, directed: boolean) => {
