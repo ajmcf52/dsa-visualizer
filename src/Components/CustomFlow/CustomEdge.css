@@ -1,0 +1,8 @@
+.defaultPath {
+    background-color: #877d8a;
+}
+
+.traversedPath {
+    background-color: #ff600a;
+    transform: scale(1.1, 1);
+}
