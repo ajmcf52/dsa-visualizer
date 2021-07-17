@@ -17,22 +17,37 @@ const handleStyle = {
 }
 
 class CustomNode extends React.Component<CustomNodeProps> {
-    /**
-     * we write a CustomNode class for a couple of reasons:
-     * 
-     * 1. It allows us to write node visit animations
-     * 2. We can use state to 
-     */
+    componentDidUpdate() {
+        var node: HTMLDivElement | null = document.querySelector('.customNode div')
+        if (node !== null) { // appending to className to trigger visitation animation
+            node.className += ' visited'
+        }
+    }
 
     render() {
         const { label } = this.props
 
+        /**
+         * TODO 
+         * - assign correct IDs to each of the handles
+         * - verify that we have all the props required for this class
+         * - verify structural integrity of the component
+         * 
+         * and later... test!
+         */
+
         return <div className='customNode' style={nodeStyle}>
             <p className='nodeText'>{label}</p>
             <Handle type='target' position={Position.Left} style={handleStyle}/>
+            <Handle type='target' position={Position.Right} style={handleStyle}/>
+            <Handle type='target' position={Position.Bottom} style={handleStyle}/>
+            <Handle type='target' position={Position.Top} style={handleStyle}/>
+            <Handle type='source' position={Position.Left} style={handleStyle}/>
             <Handle type='source' position={Position.Right} style={handleStyle}/>
             <Handle type='source' position={Position.Bottom} style={handleStyle}/>
-            <Handle type='target' position={Position.Top} style={handleStyle}/>
+            <Handle type='source' position={Position.Top} style={handleStyle}/>
         </div>
     }
 }
+
+export default CustomNode

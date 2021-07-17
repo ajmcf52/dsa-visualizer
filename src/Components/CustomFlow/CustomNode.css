@@ -15,3 +15,13 @@
     color: white;
     font-weight: bolder;
 }
+
+.visited {
+    animation: visitation 1.3s ease-in-out;
+}
+
+@keyframes visitation {
+    20% {transform: scale(0.8);}
+    70% {transform: scale(1.2);}
+    100% {transform: scale(1);}
+}
