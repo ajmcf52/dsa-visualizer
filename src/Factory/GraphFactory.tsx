@@ -1,6 +1,7 @@
-import Graph from '../Components/Graph'
-import { Elements, Edge, Node, FlowElement, ArrowHeadType, Position } from 'react-flow-renderer'
+import { Elements, FlowElement, ArrowHeadType, Position } from 'react-flow-renderer'
 import { NodeWidth, GridDimensions, AsciiA, NodeOffset, EdgeFactor } from '../Constants'
+import CustomEdge from '../Components/CustomFlow/CustomEdge'
+import CustomNode from '../Components/CustomFlow/CustomNode'
 
 interface AdjacencyMap {
     edgeLists: Map<string, {to: string, weight: number}[]>,
@@ -105,8 +106,8 @@ export const buildPositionMap = (adjMap: AdjacencyMap) => {
     return pMap
 }
 
-interface EdgeAnchorList {
-    anchors: string[]
+interface EdgeAnchorMap {
+    anchorMap: Map<string, string>
 }
 
 const edgeDescriptorMappings = {
@@ -117,7 +118,7 @@ const edgeDescriptorMappings = {
 }
 
 /**
- * helper function for generating edge labels.
+ * helper function for generating edge IDs.
  * 
  * @param toID the 'to' vertex ID string
  * @param fromID 'from' vertex ID string
@@ -128,7 +129,7 @@ const edgeDescriptorMappings = {
 const getEdgeDescriptor = (toID: string, fromID: string, toPos: Position, fromPos: Position) => {
     let toPosDescriptor = edgeDescriptorMappings[toPos],
     fromPosDescriptor = edgeDescriptorMappings[fromPos]
-    return `${toID}${toPosDescriptor}-${fromID}${fromPosDescriptor}`
+    return `${fromID}${fromPosDescriptor}-${toID}${toPosDescriptor}`
 }
 
 /**
@@ -139,8 +140,8 @@ const getEdgeDescriptor = (toID: string, fromID: string, toPos: Position, fromPo
  * @returns a list of edge labels describing their to/from anchor positions
  */
 export const generateEdgeAnchors = (adjMap: AdjacencyMap, pMap: PositionMap) => {
-    let edgeAnchors: EdgeAnchorList = {
-        anchors: []
+    let edgeAnchors: EdgeAnchorMap = {
+        anchorMap: new Map<string,string>()
     }
     adjMap.edgeLists.forEach((value: {to: string, weight: number}[], key: string) => {
         value.forEach((value: {to: string, weight: number}) => {
@@ -166,110 +167,73 @@ export const generateEdgeAnchors = (adjMap: AdjacencyMap, pMap: PositionMap) => 
                     edgeDescriptor = getEdgeDescriptor(value.to, key, Position.Bottom, Position.Top)
                 }
             }
-            edgeAnchors.anchors.push(edgeDescriptor)
+            edgeAnchors.anchorMap.set(`${key}${value.to}`, edgeDescriptor)
         })
     })
 
     return edgeAnchors
 }
 
-export const getGraphElements = (size: string, weighted: boolean, directed: boolean) => {
-    let elements: Elements = []
-    /**
-     * 'small' corresponds to 5-6
-     * 'medium' corresponds to 10-12
-     * 'large' corresponds to 20-24
-     */
-    let numElts = (size === 'small') ? Math.floor(Math.random() * 2) + 5 :
-        (size === 'medium') ? Math.floor(Math.random() * 3) + 10 : 
-            Math.floor(Math.random() * 5) + 20
-    let { width, height } = GridDimensions[size]
+const nodeTypes = {
+    customNode: CustomNode
+}
+const edgeTypes = {
+    customEdge: CustomEdge
+}
 
-    // generate grid positions for each vertex
-    let positionTracker = new Set()
-    let positions: {x: number, y: number}[] = []
-    for (var i = 0; i < numElts; i++) {
-        while (true) {
-            var pos = Math.floor(Math.random() * width * height)
-            if (!positionTracker.has(pos)) {
-                positionTracker.add(pos)
-                positions.push(generateXYPosition(pos, width))
-                break
-            }
-        }
-    }
-    // pushing in the vertices
-    for (i = 0; i < numElts; i++) {
-        let id = i + 1
-        let label = String.fromCharCode(i + AsciiA)
-        let element = {
-            id: id.toString(),
-            type: 'default',
-            data: { label: label },
-            position: positions[i]
+/**
+ * factory method responsible for generating the list of vertex/edge elements for a ReactFlow element.
+ * 
+ * @param adjMap graph's adjacency list in the form of a map. Source node ID strings are used as keys.
+ * @param posMap XY position mappings for each node, where node IDs are used as keys.
+ * @param anchors anchor ID strings for each edge. Edge IDs are used as keys.
+ * @returns an element list to be used for rendering a ReactFlow element.
+ */
+export const buildElementList = (adjMap: AdjacencyMap, posMap: PositionMap, anchors: EdgeAnchorMap) => {
+    let elements: Elements = []
+    let numV = adjMap.edgeLists.size
+
+    // forming and pushing in the vertex elements
+    for (var i = 0; i < numV; i++) {
+        let id = String.fromCharCode(i + AsciiA)
+        let element: FlowElement = {
+            id: id,
+            type: 'customNode',
+            data: { label: id, visited: false },
+            position: posMap.positions.get(id)!
         }
         elements.push(element)
     }
     
-    // generating edges for the graph
-    let adjMap: Map<string, {
-        id: string,
-        source: string,
-        target: string,
-        weight: number}[]> = new Map<string, 
-        {id: string, 
-        source: string,
-        target: string,
-        weight: number}[]>()
-    for (i = 0; i < numElts; i++) {
-        adjMap.set(i.toString(), [])
-        for (var j = 0; j < numElts; j++) {
-            if (i === j)
-                continue
-            if (!adjMap.has(j.toString())) {
-                adjMap.set(j.toString(), [])
-            }
-            let roll = Math.random()
-            if (roll <= EdgeFactor) {
-                let weight = weighted ? generateWeight(numElts) : 1
-                let id = `${i}-${j}`
-                let element: FlowElement = {id: '', source: '', target: ''}
-                if (directed) {
-                    element = {
-                        id: id,
-                        source: i.toString(),
-                        target: j.toString(),
-                        label: weight.toString(),
-                        arrowHeadType: ArrowHeadType.ArrowClosed
-                    }
-                    adjMap.get(j.toString())!.push({
-                        id: id,
-                        source: j.toString(),
-                        target: i.toString(),
-                        weight: weight
-                    })
-                }
-                else {
-                    element = {
-                        id: id,
-                        source: i.toString(),
-                        target: j.toString(),
-                        label: weight.toString(),
-                    }
-                }
-                elements.push(element)
-                adjMap.get(i.toString())!.push({
-                    id: id,
-                    source: i.toString(),
-                    target: j.toString(),
-                    weight: weight
-                })
-            }
-        }
-    }
+    // forming and pushing in the edge elements
+    for (i = 0; i < numV; i++) {
+        let fromID = String.fromCharCode(i + AsciiA)
+        let edgeList = adjMap.edgeLists.get(fromID)!
 
-    return {
-        'adjMap': adjMap,
-        'elements': elements
+        edgeList.forEach((value) => {
+            let toID = value.to
+            let edgeAnchorKey = `${fromID}${toID}`
+            let edgeID = anchors.anchorMap.get(edgeAnchorKey)!
+            let edgeAnchorComponents = edgeID.split('-')
+            let sourcePosChar = edgeAnchorComponents[0].charAt(edgeAnchorComponents[0].length - 1)
+            let targetPosChar = edgeAnchorComponents[1].charAt(edgeAnchorComponents[1].length - 1)
+            let sourceHandleID = `${sourcePosChar}s`
+            let targetHandleID = `${targetPosChar}t`
+
+            let edgeElement: FlowElement = {
+                id: edgeID,
+                source: fromID,
+                target: toID,
+                sourceHandle: sourceHandleID,
+                targetHandle: targetHandleID,
+                data: {text: value.weight, traversed: false},
+                type: 'customEdge'
+            }
+            if (adjMap.isDirected) {
+                edgeElement.arrowHeadType = ArrowHeadType.ArrowClosed
+            }
+            elements.push(edgeElement)
+        })
     }
+    return elements
 }
