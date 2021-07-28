@@ -2,8 +2,7 @@ import React from 'react'
 import './Vertex.css'
 
 interface VertexProps {
-    label: string,
-    visible: boolean
+    id: string
 }
 
 interface VertexState {
@@ -17,12 +16,20 @@ class Vertex extends React.Component<VertexProps, VertexState> {
             visited: false
         }
     }
-    
+    handleVisit = () => {
+        this.setState({visited: true})
+    }
+    resetState = () => {
+        this.setState({visited: false})
+    }
+    /**
+     * eventually, we will get rid of the span that is rendered here.
+     * this component should not be visible.
+     */
     render() {
-        return <span className='vertex' 
-        style={this.props.visible ? {display: 'flex'}:{display:'none'}}>
-                <p className='nodeText'>{this.props.label}</p>
-            </span>
+        return <span className='vertex'>
+                <p className='nodeText'>{this.props.id}</p>
+            </span> 
     }
 }
 

@@ -3,7 +3,11 @@ import { AnyAction } from 'redux'
 
 const initState = {
     startNode: '',
-    goalNode: ''
+    goalNode: '',
+    searchAlgorithm: '',
+    graphSize: 'small',
+    isWeighted: 'false',
+    isDirected: 'false'
 }
 
 export default function ControlSettingsReducer(state = initState, action: AnyAction) {
@@ -17,6 +21,26 @@ export default function ControlSettingsReducer(state = initState, action: AnyAct
             return {
                 ...state,
                 goalNode: action.goalNode
+            }
+        case ControlSettingsEventType.selectAlgorithm:
+            return {
+                ...state,
+                searchAlgorithm: action.algorithmName
+            }
+        case ControlSettingsEventType.selectGraphSize:
+            return {
+                ...state,
+                graphSize: action.graphSize
+            }
+        case ControlSettingsEventType.toggleWeighted:
+            return {
+                ...state,
+                isWeighted: action.isWeighted
+            }
+        case ControlSettingsEventType.toggleDirected:
+            return {
+                ...state,
+                isDirected: action.isDirected
             }
         default:
             return state

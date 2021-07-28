@@ -1,4 +1,4 @@
-import { TabClickEventType} from "../Actions/TabClickEvent";
+import { TabClickEventType } from "../Actions/TabClickEvent";
 import { AnyAction } from 'redux'
 
 const initState = {

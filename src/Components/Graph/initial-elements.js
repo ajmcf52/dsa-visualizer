@@ -1,4 +1,3 @@
-import React from 'react'
 
 const DIMENSION_MAP = {
     'small': [4,3],

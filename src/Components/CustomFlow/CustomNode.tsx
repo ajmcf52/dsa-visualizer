@@ -4,8 +4,7 @@ import { NodeHandleColor, NodeBackgroundColor } from '../../Constants'
 import './CustomNode.css'
 
 interface CustomNodeProps {
-    label: string,
-    visited: boolean
+    data: {label: string, visited: boolean}
 }
 
 const nodeStyle = {
@@ -21,7 +20,7 @@ class CustomNode extends React.Component<CustomNodeProps> {
     }
 
     render() {
-        const { label } = this.props
+        const { data } = this.props
 
         /**
          * TODO 
@@ -39,7 +38,7 @@ class CustomNode extends React.Component<CustomNodeProps> {
          */
 
         return <div className='customNode' style={nodeStyle}>
-            <p className='nodeText'>{label}</p>
+            <p className='nodeText'>{data.label}</p>
             <Handle type='target' position={Position.Left} style={{backgroundColor:NodeHandleColor,
             top:'50%'}} id='lt'/>
             <Handle type='target' position={Position.Right} style={{backgroundColor:NodeHandleColor,

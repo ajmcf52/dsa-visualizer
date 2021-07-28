@@ -1,9 +1,7 @@
 import { Elements, FlowElement, ArrowHeadType, Position } from 'react-flow-renderer'
 import { NodeWidth, GridDimensions, AsciiA, NodeOffset, EdgeFactor } from '../Constants'
-import CustomEdge from '../Components/CustomFlow/CustomEdge'
-import CustomNode from '../Components/CustomFlow/CustomNode'
 
-interface AdjacencyMap {
+export interface AdjacencyMap {
     edgeLists: Map<string, {to: string, weight: number}[]>,
     isWeighted: boolean,
     isDirected: boolean,
@@ -174,13 +172,6 @@ export const generateEdgeAnchors = (adjMap: AdjacencyMap, pMap: PositionMap) => 
     return edgeAnchors
 }
 
-const nodeTypes = {
-    customNode: CustomNode
-}
-const edgeTypes = {
-    customEdge: CustomEdge
-}
-
 /**
  * factory method responsible for generating the list of vertex/edge elements for a ReactFlow element.
  * 
@@ -191,6 +182,8 @@ const edgeTypes = {
  */
 export const buildElementList = (adjMap: AdjacencyMap, posMap: PositionMap, anchors: EdgeAnchorMap) => {
     let elements: Elements = []
+    let elementIndexMap: Map<string, number> = new Map()
+    let currentIndex = 0
     let numV = adjMap.edgeLists.size
 
     // forming and pushing in the vertex elements
@@ -203,6 +196,7 @@ export const buildElementList = (adjMap: AdjacencyMap, posMap: PositionMap, anch
             position: posMap.positions.get(id)!
         }
         elements.push(element)
+        elementIndexMap.set(id, currentIndex++)
     }
     
     // forming and pushing in the edge elements
@@ -210,7 +204,8 @@ export const buildElementList = (adjMap: AdjacencyMap, posMap: PositionMap, anch
         let fromID = String.fromCharCode(i + AsciiA)
         let edgeList = adjMap.edgeLists.get(fromID)!
 
-        edgeList.forEach((value) => {
+        for (var j = 0; j < edgeList.length; j++) {
+            let value = edgeList[j]
             let toID = value.to
             let edgeAnchorKey = `${fromID}${toID}`
             let edgeID = anchors.anchorMap.get(edgeAnchorKey)!
@@ -233,7 +228,8 @@ export const buildElementList = (adjMap: AdjacencyMap, posMap: PositionMap, anch
                 edgeElement.arrowHeadType = ArrowHeadType.ArrowClosed
             }
             elements.push(edgeElement)
-        })
+            elementIndexMap.set(edgeID, currentIndex++)
+        }
     }
-    return elements
+    return { 'elements': elements, 'indices': elementIndexMap }
 }

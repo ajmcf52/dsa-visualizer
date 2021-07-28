@@ -1,40 +1,44 @@
 {
-    "searchSettings": [
-        {
-            "label": "Start Node:",
-            "inputType": "select"
+    "searching": {
+        "searchSettings": {
+            "algorithm": {
+                "type": "select",
+                "options": [
+                    "DFS",
+                    "BFS",
+                    "Djikstra",
+                    "A*"
+                ]
+            },
+            "start node": {
+                "type": "select",
+                "options": "dynamic"
+            },
+            "goal node": {
+                "type": "select",
+                "options": "dynamic"
+            }
         },
-        {
-            "label": "Goal Node:",
-            "inputType": "select"
-        },
-        {
-            "label": "Directed",
-            "inputType": "boolean"
-        },
-        {
-            "label": "Weighted",
-            "inputType": "boolean"
-        },
-        {
-            "label": "Graph Size:",
-            "inputType": "radio",
-            "options": [
-                "Small",
-                "Medium",
-                "Large"
-            ]
-        },
-        {
-            "label": "Search Style:",
-            "inputType": "radio",
-            "options": [
-                "Stepwise",
-                "Continuous"
-            ]
+        "graphSettings": {
+            "graph size": {
+                "type": "radio",
+                "options": [
+                    "small",
+                    "medium",
+                    "large"
+                ]
+            },
+            "weighted": {
+                "type": "toggle"
+            },
+            "directed": {
+                "type": "toggle"
+            }
         }
-    ],
-    "sortSettings": [
-
-    ]
+    },
+    "sorting": {
+        "animation speed": {
+            "type": "slider"
+        }
+    }
 }

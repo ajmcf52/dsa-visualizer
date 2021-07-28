@@ -48,8 +48,8 @@ class CustomEdge extends React.Component<CustomEdgeProps> {
 
         return (
         <>
-            <path id={id} style={style} className='defaultPath' d={edgePath} markerEnd={markerEnd} />
-            <path id={id} style={style} className='traversedPath' d={edgePath} markerEnd={markerEnd} />
+            <path id={id} style={style} className='defaultPath' d={edgePath} markerEnd={markerEnd} strokeWidth='2px' stroke='black' fill='none'/>
+            <path id={id} style={style} className='traversedPath' d={edgePath} markerEnd={markerEnd} strokeWidth='2px' stroke='black' fill='none'/>
             <text>
                 <textPath href={`#${id}`} style={{fontSize: '12px'}} startOffset='50%' textAnchor='middle'>
                     {data.text}
