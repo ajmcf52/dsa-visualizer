@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { GraphEventCreator } from '../../Actions/GraphEvent'
 import { AdjacencyMap } from '../../Factory/GraphFactory'
-import { Elements, useZoomPanHelper } from 'react-flow-renderer'
+import { Elements, OnLoadParams } from 'react-flow-renderer'
 import ReactFlow from 'react-flow-renderer'
 import CustomEdge from '../CustomFlow/CustomEdge'
 import CustomNode from '../CustomFlow/CustomNode'
@@ -22,7 +22,10 @@ interface GraphProps {
     indexMap: Map<string, number>
 }
 
-
+const onLoad = (reactFlowInstance: OnLoadParams) => {
+    reactFlowInstance.fitView({padding: 1, includeHiddenNodes: true})
+    
+}
 
 class Graph extends React.Component<GraphProps> {
 
@@ -48,6 +51,7 @@ class Graph extends React.Component<GraphProps> {
             elements={elementList} 
             nodeTypes={nodeTypes} 
             edgeTypes={edgeTypes}
+            onLoad={onLoad}
         >
         </ReactFlow>
         </div>)
