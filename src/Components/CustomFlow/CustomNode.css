@@ -16,7 +16,7 @@
     color: white;
     font-weight: bolder;
     display: flex;
-    
+    justify-content: center;
 }
 
 .visited {

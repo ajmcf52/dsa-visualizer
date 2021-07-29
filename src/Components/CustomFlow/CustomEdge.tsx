@@ -1,5 +1,5 @@
 import React from 'react'
-import { ArrowHeadType, getBezierPath, getMarkerEnd, Position } from 'react-flow-renderer'
+import { ArrowHeadType, getBezierPath, getMarkerEnd, Position, getEdgeCenter, EdgeText } from 'react-flow-renderer'
 
 interface CustomEdgeProps {
     id: string,
@@ -45,16 +45,13 @@ class CustomEdge extends React.Component<CustomEdgeProps> {
         
         const edgePath = getBezierPath({sourceX, sourceY, sourcePosition, targetX, targetY, targetPosition})
         const markerEnd = getMarkerEnd(arrowHeadType, markerEndId)
+        const [centerX, centerY] = getEdgeCenter({sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition})
 
         return (
         <>
             <path id={id} style={style} className='defaultPath' d={edgePath} markerEnd={markerEnd} strokeWidth='2px' stroke='black' fill='none'/>
             <path id={id} style={style} className='traversedPath' d={edgePath} markerEnd={markerEnd} strokeWidth='2px' stroke='black' fill='none'/>
-            <text>
-                <textPath href={`#${id}`} style={{fontSize: '12px'}} startOffset='50%' textAnchor='middle'>
-                    {data.text}
-                </textPath>
-            </text>
+            <EdgeText x={centerX} y={centerY} label={data.text} />
         </>
     )
     }
