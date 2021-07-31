@@ -112,7 +112,7 @@ class MinHeap {
 }
 
 class PriorityQueue {
-    heap: MinHeap = new MinHeap()
+    private heap: MinHeap = new MinHeap()
 
     add(id: string, cost: number, via: string) {
         let node: HeapNode = {
@@ -130,6 +130,15 @@ class PriorityQueue {
     removeHead() {
         let result = this.heap.remove()
         return result
+    }
+
+    isEmpty() {
+        if (this.heap.N === 0) {
+            return true
+        }
+        else {
+            return false
+        }
     }
 }
 

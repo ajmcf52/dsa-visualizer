@@ -1,4 +1,7 @@
-export {}
+import React from "react";
+import { AdjacencyMap } from "../../Factory/GraphFactory";
+import PriorityQueue from './PriorityQueue'
+
 /**
  * pseudocode:
  * 
@@ -13,9 +16,62 @@ export {}
  *      pull the topmost node out of the PQ
  *      if the node is the goal node, we're done (re-trace the path)
  * 
- *      for each neighbor:
+ *      for each neighbor that is unvisited:
  *          set its distance as the minimum between its current known distance and the topmost node's
  *          distance plus the cost of the connecting edge.
  *          
- *          if the node is not already in the PQ, add it in now.
+ *          if the node is not already in the PQ, add it in now. Otherwise, if the new distance is smaller than
+ *          its current distance, update it (as well as the 'via' field)
  */
+
+interface DjikstraSolverProps {
+    G: AdjacencyMap,
+    start: string,
+    end: string
+} 
+
+interface DjikstraSolverState {
+
+}
+
+export class DjikstraSolver extends React.Component<DjikstraSolverProps, DjikstraSolverState> {
+    run() {
+        let { G, start, end } = this.props
+        let unvisited = new Set<string>()
+        let distances: {[id: string] : number} = {}
+        G.edgeLists.forEach((value, key) => {
+            if (key === start) {
+                distances[key] = 0
+            }
+            else {
+                distances[key] = Number.POSITIVE_INFINITY
+            }
+            unvisited.add(key)
+        }) 
+        let pq: PriorityQueue = new PriorityQueue()
+        pq.add(start, 0, '-')
+        
+        while (!pq.isEmpty()) {
+            let current = pq.removeHead()!
+            if (current.id === end) {
+                // we're done!
+                // TODO add in visual backtracking of the shortest path found
+                return 'success'
+            }
+            G.edgeLists.get(current.id)!.forEach((value, index) => {
+                let costToNeighbor = distances[current.id] + value.weight
+                if (distances[value.to] === Number.POSITIVE_INFINITY) {
+                    distances[value.to] = costToNeighbor
+                    // TODO add in an animation here
+                    pq.add(value.to, costToNeighbor, current.id)
+                }
+                else if (distances[value.to] > costToNeighbor) {
+                    distances[value.to] = costToNeighbor
+                    // TODO add in an animation here
+                    pq.setCostOf(value.to, costToNeighbor, current.id)
+                }
+            })
+        }
+    }
+}
+
