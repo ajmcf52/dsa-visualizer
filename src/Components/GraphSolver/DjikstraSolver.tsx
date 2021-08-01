@@ -58,7 +58,10 @@ export class DjikstraSolver extends React.Component<DjikstraSolverProps, Djikstr
                 // TODO add in visual backtracking of the shortest path found
                 return 'success'
             }
-            G.edgeLists.get(current.id)!.forEach((value, index) => {
+            // we only want to process edges to nodes that are still unvisited
+            G.edgeLists.get(current.id)!.filter(value => unvisited.has(value.to))
+            .forEach((value) => {
+                
                 let costToNeighbor = distances[current.id] + value.weight
                 if (distances[value.to] === Number.POSITIVE_INFINITY) {
                     distances[value.to] = costToNeighbor
@@ -71,6 +74,8 @@ export class DjikstraSolver extends React.Component<DjikstraSolverProps, Djikstr
                     pq.setCostOf(value.to, costToNeighbor, current.id)
                 }
             })
+            // mark the node that we have visited
+            unvisited.delete(current.id)
         }
     }
 }
