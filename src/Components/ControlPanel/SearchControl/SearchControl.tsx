@@ -38,7 +38,8 @@ const SearchControl = (props: SearchControlProps) => {
 
 const mapStateToProps = (state: RootState, props: SearchControlProps) => ({
     chosenStartNode: state && state.controlSettings && state.controlSettings.startNode,
-    chosenGoalNode: state && state.controlSettings && state.controlSettings.goalNode
+    chosenGoalNode: state && state.controlSettings && state.controlSettings.goalNode,
+    
 })
 
 const mapDispatchToProps = {

@@ -18,11 +18,12 @@ const edgeTypes = {
 
 interface GraphProps {
     adjMap: AdjacencyMap,
+    plainEdgeLists: {[key: string]: {to: string, weight: number}[]},
     vertexList: string[],
     elementList: Elements,
     indexMap: Map<string, number>,
     pushVertexIDs: (vertexIDs: string[]) => {},
-    pushAdjacencyMap: (adjMap: AdjacencyMap) => {}
+    pushAdjacencyMap: (edgeLists: {[key: string]: {to: string, weight: number}[]}) => {}
 }
 
 const onLoad = (reactFlowInstance: OnLoadParams) => {
@@ -33,9 +34,9 @@ const onLoad = (reactFlowInstance: OnLoadParams) => {
 class Graph extends React.Component<GraphProps> {
 
     componentDidMount() {
-        const { pushVertexIDs, pushAdjacencyMap, vertexList, adjMap } = this.props
+        const { pushVertexIDs, pushAdjacencyMap, vertexList, plainEdgeLists } = this.props
         pushVertexIDs(vertexList)
-        pushAdjacencyMap(adjMap)
+        pushAdjacencyMap(plainEdgeLists)
     }
 
     visitNode(nodeId: string) {

@@ -10,16 +10,30 @@ import Graph from './Components/Graph';
 
 function App() {
   let adjMap = buildAdjacencyMap('small', true, true)
+  let plainEdgeLists: {[key: string] : {to: string, weight: number}[]} = {}
+  adjMap.edgeLists.forEach((value, key) => {
+    plainEdgeLists[key] = value
+  })
+
+  let vertexList = Array.from(adjMap.edgeLists.keys())
   let posMap = buildPositionMap(adjMap)
   let anchorMap = generateEdgeAnchors(adjMap, posMap)
   let results = buildElementList(adjMap, posMap, anchorMap)
   let elements = results.elements
+  console.log(adjMap)
   return (
     <div className="App">
       <Provider store={store}>
         <ConfigLoader />
         <ControlPanel />
-        <Graph elementList={elements} adjMap={adjMap} indexMap={results.indices}></Graph>
+        <Graph
+          elementList={elements}
+          adjMap={adjMap}
+          plainEdgeLists={plainEdgeLists}
+          indexMap={results.indices}
+          vertexList={vertexList}
+          >
+        </Graph>
       </Provider>
     </div>
   );

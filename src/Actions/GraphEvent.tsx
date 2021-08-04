@@ -1,5 +1,3 @@
-import { AdjacencyMap } from "../Factory/GraphFactory"
-
 
 const GraphEventType = {
     vertexListPush: 'VERTEX_LIST_PUSH',
@@ -11,7 +9,7 @@ const GraphEventCreator = {
         type: GraphEventType.vertexListPush,
         vertexList
     }),
-    adjMapPush: (adjMap: AdjacencyMap) => ({
+    adjMapPush: (adjMap: {[key: string]: {to: string, weight: number}[]}) => ({
         type: GraphEventType.adjMapPush,
         adjMap
     })
