@@ -2,21 +2,21 @@ import { GraphEventType } from "../Actions/GraphEvent";
 import { AnyAction } from "redux";
 
 const initState = {
-    vertexMap: {},
-    edgeMap: {}
+    vertexList: [],
+    adjMap: {}
 }
 
 export default function GraphReducer(state = initState, action: AnyAction) {
     switch (action.type) {
-        case GraphEventType.vertexMapPush:
+        case GraphEventType.vertexListPush:
             return {
                 ...state,
-                vertexMap: action.vertexMap
+                vertexList: action.vertexList
             }
-        case GraphEventType.edgeMapPush:
+        case GraphEventType.adjMapPush:
             return {
                 ...state,
-                edgeMap: action.edgeMap
+                adjMap: action.adjMap
             }
         default:
             return state

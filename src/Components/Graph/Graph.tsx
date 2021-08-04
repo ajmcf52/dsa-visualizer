@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { GraphEventCreator } from '../../Actions/GraphEvent'
+import { GraphEventCreator, GraphEventType } from '../../Actions/GraphEvent'
 import { AdjacencyMap } from '../../Factory/GraphFactory'
 import { Elements, OnLoadParams } from 'react-flow-renderer'
 import ReactFlow from 'react-flow-renderer'
@@ -18,8 +18,11 @@ const edgeTypes = {
 
 interface GraphProps {
     adjMap: AdjacencyMap,
+    vertexList: string[],
     elementList: Elements,
-    indexMap: Map<string, number>
+    indexMap: Map<string, number>,
+    pushVertexIDs: (vertexIDs: string[]) => {},
+    pushAdjacencyMap: (adjMap: AdjacencyMap) => {}
 }
 
 const onLoad = (reactFlowInstance: OnLoadParams) => {
@@ -28,6 +31,12 @@ const onLoad = (reactFlowInstance: OnLoadParams) => {
 }
 
 class Graph extends React.Component<GraphProps> {
+
+    componentDidMount() {
+        const { pushVertexIDs, pushAdjacencyMap, vertexList, adjMap } = this.props
+        pushVertexIDs(vertexList)
+        pushAdjacencyMap(adjMap)
+    }
 
     visitNode(nodeId: string) {
         const {elementList, indexMap } = this.props
@@ -58,4 +67,14 @@ class Graph extends React.Component<GraphProps> {
     }
 }
 
-export default Graph
+const mapDispatchToProps = {
+    pushVertexIDs: GraphEventCreator.vertexListPush,
+    pushAdjacencyMap: GraphEventCreator.adjMapPush
+}
+
+const connectedComp = connect(
+    null,
+    mapDispatchToProps
+)(Graph)
+
+export default connectedComp
