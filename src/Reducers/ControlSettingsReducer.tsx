@@ -4,7 +4,7 @@ import { AnyAction } from 'redux'
 const initState = {
     startNode: '',
     goalNode: '',
-    searchAlgorithm: '',
+    algorithm: '',
     graphSize: 'small',
     isWeighted: 'false',
     isDirected: 'false'
@@ -25,7 +25,7 @@ export default function ControlSettingsReducer(state = initState, action: AnyAct
         case ControlSettingsEventType.selectAlgorithm:
             return {
                 ...state,
-                searchAlgorithm: action.algorithmName
+                algorithm: action.algorithmName
             }
         case ControlSettingsEventType.selectGraphSize:
             return {
