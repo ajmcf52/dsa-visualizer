@@ -8,14 +8,15 @@ import { RootState } from '../../../store'
 interface SearchControlProps {
     startNode: string,
     goalNode: string,
-    chooseStartNode: (startNode: string) => {}
+    chooseStartNode: (startNode: string) => {},
+    vertexList: string[],
 }
 
 const SearchControl = (props: SearchControlProps) => {
-    const { startNode, goalNode, chooseStartNode } = props
+    const { startNode, goalNode, chooseStartNode, vertexList } = props
     
     return (<Box className='selectStartNodeBox'>
-        <FormControl fullWidth>
+        <FormControl>
             <InputLabel id='selectStartNodeLabel'>Start Node</InputLabel>
             <Select
                 labelId='selectStartNodeLabel'
@@ -24,13 +25,10 @@ const SearchControl = (props: SearchControlProps) => {
                 label='Start Node'
                 onChange={(e) => chooseStartNode(e.currentTarget.value as string)}
             >
-                {/**
-                 * placeholder values being used for now until we get our built graph
-                 * linked up with the app state.
-                 */}
-                <MenuItem value={'A'}>A</MenuItem>
-                <MenuItem value={'B'}>B</MenuItem>
-                <MenuItem value={'C'}>C</MenuItem>
+            {vertexList.map((value) => {
+                return<MenuItem value={value}>{value}</MenuItem>
+            })}
+
             </Select>
         </FormControl>
     </Box>)
@@ -39,7 +37,7 @@ const SearchControl = (props: SearchControlProps) => {
 const mapStateToProps = (state: RootState, props: SearchControlProps) => ({
     chosenStartNode: state && state.controlSettings && state.controlSettings.startNode,
     chosenGoalNode: state && state.controlSettings && state.controlSettings.goalNode,
-    
+    vertexList: state && state.graphDetails && state.graphDetails.vertexList
 })
 
 const mapDispatchToProps = {

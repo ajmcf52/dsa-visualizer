@@ -1,5 +1,6 @@
 import "./ControlPanel.css"
 import TabControl from './TabControl'
+import SearchControl from './SearchControl'
 
 interface ControlPanelProps {
     algorithms: {
@@ -23,7 +24,7 @@ interface ControlPanelProps {
 function ControlPanel () {
     return <div className='controlContainer'>
         <div className='controlPanel'>
-
+            <SearchControl />
         </div>
         <TabControl />
     </div>
