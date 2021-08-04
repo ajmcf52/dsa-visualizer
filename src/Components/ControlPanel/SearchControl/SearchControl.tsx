@@ -1,5 +1,5 @@
 import './SearchControl.css'
-import React from 'react'
+import React, { useState } from 'react'
 import { connect } from 'react-redux'
 import { ControlSettingsEventCreator } from '../../../Actions/ControlSettingsEvent'
 import { FormControl, InputLabel, Select, MenuItem, InputBase, Input } from '@material-ui/core'
@@ -44,32 +44,62 @@ const useStyles = makeStyles((theme: Theme) =>
 )
 
 interface SearchControlProps {
-    startNode: string,
-    goalNode: string,
     chooseStartNode: (startNode: string) => {},
+    chooseGoalNode: (goalNode: string) => {},
     vertexList: string[],
 }
 
+interface SearchControlState {
+    startNode: string,
+    goalNode: string
+}
+
 const SearchControl = (props: SearchControlProps) => {
-    const { startNode, goalNode, chooseStartNode, vertexList } = props
+    const { chooseStartNode, chooseGoalNode, vertexList } = props
+    const [startNode, setStartNode] = useState('')
+    const [goalNode, setGoalNode] = useState('')
     const classes = useStyles()
     return (
-        <FormControl className={classes.formControl}>
-            <InputLabel id='selectStartNodeLabel'>Start</InputLabel>
-            <Select
-                labelId='selectStartNodeLabel'
-                id='selectStartNode'
-                value={startNode}
-                label='Start'
-                onChange={(e) => chooseStartNode(e.currentTarget.value as string)}
-                input={<BootstrapInput />}
-            >
-            {vertexList.map((value) => {
-                return<MenuItem value={value}>{value}</MenuItem>
-            })}
+        <div>
+            <FormControl className={classes.formControl}>
+                <InputLabel id='selectNodeLabel'>Start</InputLabel>
+                <Select
+                    labelId='selectNodeLabel'
+                    id='selectStartNode'
+                    value={startNode}
+                    label='Start'
+                    onChange={(e) => {
+                        console.log(e.target.value)
+                        chooseStartNode(e.target.value as string) // app state push for graph solver
+                        setStartNode(e.target.value as string) // component state
+                    }}
+                    input={<BootstrapInput />}
+                >
+                    {vertexList.filter(value => value !== goalNode).map((value) => {
+                        return<MenuItem key={value} value={value}>{value}</MenuItem>
+                    })}
+                </Select>
+            </FormControl>
+            <FormControl className={classes.formControl}>
+                <InputLabel id='selectNodeLabel'>Goal</InputLabel>
+                <Select
+                    labelId='selectNodeLabel'
+                    id='selectGoalNode'
+                    value={goalNode}
+                    label='Goal'
+                    onChange={(e) => {
+                        chooseGoalNode(e.target.value as string)
+                        setGoalNode(e.target.value as string)
+                    }}
+                    input={<BootstrapInput />}
+                >
+                    {vertexList.filter(value => value !== startNode).map((value) => {
+                        return <MenuItem key={value} value={value}>{value}</MenuItem>
+                    })}
+                </Select>
+            </FormControl>
+        </div>
 
-            </Select>
-        </FormControl>
     )
 }
 
@@ -80,7 +110,8 @@ const mapStateToProps = (state: RootState, props: SearchControlProps) => ({
 })
 
 const mapDispatchToProps = {
-    chooseStartNode: ControlSettingsEventCreator.selectStartNode
+    chooseStartNode: ControlSettingsEventCreator.selectStartNode,
+    chooseGoalNode: ControlSettingsEventCreator.selectGoalNode
 }
 
 const connectedComp = connect(
