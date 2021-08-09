@@ -3,43 +3,25 @@ import React, { useState } from 'react'
 import { connect } from 'react-redux'
 import { ControlSettingsEventCreator } from '../../../Actions/ControlSettingsEvent'
 import { FormControl, InputLabel, Select, MenuItem, InputBase, Input } from '@material-ui/core'
-import { createStyles, makeStyles, Theme, withStyles } from '@material-ui/core/styles'
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 import { RootState } from '../../../store'
-
-
-
-const BootstrapInput = withStyles((theme: Theme) => 
-    createStyles({
-        root: {
-            'label + &': {
-                marginTop: theme.spacing(3),
-            }
-        },
-        input: {
-            borderRadius: 4,
-            textAlignLast: 'center',
-            fontSize: 16,
-            border: '1px solid #ced4da',
-            position: 'relative',
-            padding: '10px 26px 10px 12px',
-            transition: theme.transitions.create(['border-color', 'box-shadow']),
-            fontFamily: ['Courier New'].join(','),
-            '&:focus': {
-                borderColor: '#80bdff',
-                boxShadow: '0 0 0 0.2rem rgba(0,123,255,0.25)'
-            }
-        }
-    }))(InputBase)
+import classNames from 'classnames'
 
 const useStyles = makeStyles((theme: Theme) => 
     createStyles({
         formControl: {
             margin: '0px 0px 2px 10px',
             minWidth: 60,
-            textAlignLast: "center"
+            textAlignLast: 'center',
+            color: 'white'
         },
         selection: {
             padding: '10px 26px 10px 12px'
+        },
+        menuSelect: {
+            '& .MuiPaper-root': {
+                backgroundColor: 'lightblue'
+            }
         }
     })
 
@@ -52,11 +34,6 @@ interface SearchControlProps {
     vertexList: string[],
     searchAlgorithms: string[],
     chosenSearchAlgorithm: string
-}
-
-interface SearchControlState {
-    startNode: string,
-    goalNode: string
 }
 
 const SearchControl = (props: SearchControlProps) => {
@@ -79,9 +56,10 @@ const SearchControl = (props: SearchControlProps) => {
     else {
         return (
             <div className='searchSettings'>
-                <FormControl className={classes.formControl}>
-                    <InputLabel id='selectAlgorithmLabel'>Algorithm</InputLabel>
+                <FormControl className={classNames(classes.formControl, classes.menuSelect)}>
+                    <InputLabel style={{color: 'white'}} id='selectAlgorithmLabel'>Algorithm</InputLabel>
                     <Select
+                        MenuProps={{className: classes.menuSelect}}
                         style={{minWidth:'100px'}}
                         labelId='selectAlgorithmLabel'
                         id='selectAlgorithm'
@@ -93,13 +71,14 @@ const SearchControl = (props: SearchControlProps) => {
                             <em>None</em>
                         </MenuItem>
                         {searchAlgorithms.map((value) => {
-                            return <MenuItem key={value} value={value}>{value}</MenuItem>
+                            return <MenuItem style={{backgroundColor:'lightblue'}} key={value} value={value}>{value}</MenuItem>
                         })}
                     </Select>
                 </FormControl>
                 <FormControl className={classes.formControl}>
-                    <InputLabel id='selectNodeLabel'>Start</InputLabel>
+                    <InputLabel style={{color: 'white'}} id='selectNodeLabel'>Start</InputLabel>
                     <Select
+                        MenuProps={{className: classes.menuSelect}}
                         open={startSelectOpen}
                         onOpen={handleStartSelectOpen}
                         onClose={handleStartSelectClose}
@@ -121,8 +100,9 @@ const SearchControl = (props: SearchControlProps) => {
                     </Select>
                 </FormControl>
                 <FormControl className={classes.formControl}>
-                    <InputLabel id='selectNodeLabel'>Goal</InputLabel>
+                    <InputLabel style={{color: 'white'}} id='selectNodeLabel'>Goal</InputLabel>
                     <Select
+                        MenuProps={{className: classes.menuSelect}}
                         labelId='selectNodeLabel'
                         id='selectGoalNode'
                         value={goalNode}
