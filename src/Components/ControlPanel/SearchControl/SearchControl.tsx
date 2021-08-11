@@ -10,10 +10,13 @@ import classNames from 'classnames'
 const useStyles = makeStyles((theme: Theme) => 
     createStyles({
         formControl: {
-            margin: '0px 0px 2px 10px',
+            margin: '10px 0px 2px 10px',
             minWidth: 60,
             textAlignLast: 'center',
-            color: 'white'
+            color: 'white',
+            '& .MuiSelect-root': {
+                color: 'white'
+            }
         },
         selection: {
             padding: '10px 26px 10px 12px'
@@ -31,13 +34,33 @@ interface SearchControlProps {
     chooseStartNode: (startNode: string) => {},
     chooseGoalNode: (goalNode: string) => {},
     chooseSearchAlgorithm: (algorithm: string) => {},
+    chooseGraphSize: (graphSize: string) => {},
+    toggleWeighted: (isWeighted: boolean) => {},
+    toggleDirected: (isDirected: boolean) => {},
     vertexList: string[],
     searchAlgorithms: string[],
-    chosenSearchAlgorithm: string
+    chosenSearchAlgorithm: string,
+    graphSize: string,
+    isWeighted: boolean,
+    isDirected: boolean,
+    graphSizeOptions: string[]
 }
 
 const SearchControl = (props: SearchControlProps) => {
-    const { chooseStartNode, chooseGoalNode, chooseSearchAlgorithm, vertexList, searchAlgorithms, chosenSearchAlgorithm } = props
+    const { 
+        chooseStartNode, 
+        chooseGoalNode, 
+        chooseSearchAlgorithm,
+        chooseGraphSize,
+        toggleWeighted,
+        toggleDirected,
+        vertexList, 
+        searchAlgorithms, 
+        chosenSearchAlgorithm,
+        graphSize,
+        isWeighted,
+        isDirected,
+        graphSizeOptions } = props
     const [startNode, setStartNode] = useState('')
     const [startSelectOpen, setStartSelectOpen] = useState(false)
     const [goalNode, setGoalNode] = useState('')
@@ -55,72 +78,92 @@ const SearchControl = (props: SearchControlProps) => {
     }
     else {
         return (
-            <div className='searchSettings'>
-                <FormControl className={classNames(classes.formControl, classes.menuSelect)}>
-                    <InputLabel style={{color: 'white'}} id='selectAlgorithmLabel'>Algorithm</InputLabel>
-                    <Select
-                        MenuProps={{className: classes.menuSelect}}
-                        style={{minWidth:'100px'}}
-                        labelId='selectAlgorithmLabel'
-                        id='selectAlgorithm'
-                        value={chosenSearchAlgorithm}
-                        label='Algorithm'
-                        onChange={(e) => chooseSearchAlgorithm(e.target.value as string)}
-                    >
-                        <MenuItem value=''>
-                            <em>None</em>
-                        </MenuItem>
-                        {searchAlgorithms.map((value) => {
-                            return <MenuItem style={{backgroundColor:'lightblue'}} key={value} value={value}>{value}</MenuItem>
-                        })}
-                    </Select>
-                </FormControl>
-                <FormControl className={classes.formControl}>
-                    <InputLabel style={{color: 'white'}} id='selectNodeLabel'>Start</InputLabel>
-                    <Select
-                        MenuProps={{className: classes.menuSelect}}
-                        open={startSelectOpen}
-                        onOpen={handleStartSelectOpen}
-                        onClose={handleStartSelectClose}
-                        labelId='selectNodeLabel'
-                        id='selectStartNode'
-                        value={startNode}
-                        label='Start'
-                        onChange={(e) => {
-                            chooseStartNode(e.target.value as string) // to app state (for graph solver)
-                            setStartNode(e.target.value as string) // to component state
-                        }}
-                    >
-                        <MenuItem value=''>
-                            <em>None</em>
-                        </MenuItem>
-                        {vertexList.filter(value => value !== goalNode).map((value) => {
-                            return <MenuItem key={value} value={value}>{value}</MenuItem>
-                        })}
-                    </Select>
-                </FormControl>
-                <FormControl className={classes.formControl}>
-                    <InputLabel style={{color: 'white'}} id='selectNodeLabel'>Goal</InputLabel>
-                    <Select
-                        MenuProps={{className: classes.menuSelect}}
-                        labelId='selectNodeLabel'
-                        id='selectGoalNode'
-                        value={goalNode}
-                        label='Goal'
-                        onChange={(e) => {
-                            chooseGoalNode(e.target.value as string) // to app state
-                            setGoalNode(e.target.value as string) // to component state
-                        }}
-                    >
-                        <MenuItem value=''>
-                            <em>None</em>
-                        </MenuItem>
-                        {vertexList.filter(value => value !== startNode).map((value) => {
-                            return <MenuItem key={value} value={value}>{value}</MenuItem>
-                        })}
-                    </Select>
-                </FormControl>
+            <div className='controlsContainer'>
+                <div className='settingsList'>
+                    <FormControl className={classes.formControl}>
+                        <InputLabel style={{color: 'white'}} id='selectAlgorithmLabel'>Algorithm</InputLabel>
+                        <Select
+                            MenuProps={{className: classes.menuSelect}}
+                            style={{minWidth:'100px'}}
+                            labelId='selectAlgorithmLabel'
+                            id='selectAlgorithm'
+                            value={chosenSearchAlgorithm}
+                            label='Algorithm'
+                            onChange={(e) => chooseSearchAlgorithm(e.target.value as string)}
+                        >
+                            <MenuItem value='' style={{color: 'white'}}>
+                                <em>None</em>
+                            </MenuItem>
+                            {searchAlgorithms.map((value) => {
+                                return <MenuItem style={{color: 'white'}} key={value} value={value}>{value}</MenuItem>
+                            })}
+                        </Select>
+                    </FormControl>
+                    <FormControl className={classes.formControl}>
+                        <InputLabel style={{color: 'white'}} id='selectNodeLabel'>Start</InputLabel>
+                        <Select
+                            MenuProps={{className: classes.menuSelect}}
+                            open={startSelectOpen}
+                            onOpen={handleStartSelectOpen}
+                            onClose={handleStartSelectClose}
+                            labelId='selectNodeLabel'
+                            id='selectStartNode'
+                            value={startNode}
+                            label='Start'
+                            onChange={(e) => {
+                                chooseStartNode(e.target.value as string) // to app state (for graph solver)
+                                setStartNode(e.target.value as string) // to component state
+                            }}
+                        >
+                            <MenuItem value='' style={{color: 'white'}}>
+                                <em>None</em>
+                            </MenuItem>
+                            {vertexList.filter(value => value !== goalNode).map((value) => {
+                                return <MenuItem key={value} value={value} style={{color: 'white'}}>{value}</MenuItem>
+                            })}
+                        </Select>
+                    </FormControl>
+                    <FormControl className={classes.formControl}>
+                        <InputLabel style={{color: 'white'}} id='selectNodeLabel'>Goal</InputLabel>
+                        <Select
+                            MenuProps={{className: classes.menuSelect}}
+                            labelId='selectNodeLabel'
+                            id='selectGoalNode'
+                            value={goalNode}
+                            label='Goal'
+                            onChange={(e) => {
+                                chooseGoalNode(e.target.value as string) // to app state
+                                setGoalNode(e.target.value as string) // to component state
+                            }}
+                        >
+                            <MenuItem value='' style={{color: 'white'}}>
+                                <em>None</em>
+                            </MenuItem>
+                            {vertexList.filter(value => value !== startNode).map((value) => {
+                                return <MenuItem key={value} value={value} style={{color: 'white'}}>{value}</MenuItem>
+                            })}
+                        </Select>
+                    </FormControl>
+                </div>
+                <div className='settingsList'>
+                    <FormControl style={{minWidth: 90}} className={classes.formControl}>
+                        <InputLabel style={{color: 'white'}} id='selectGraphSizeLabel'>Graph Size</InputLabel>
+                        <Select
+                            MenuProps={{className: classes.menuSelect}}
+                            labelId='selectGraphSizeLabel'
+                            id='selectGraphSize'
+                            value={graphSize}
+                            label='Graph Size'
+                            onChange={(e) => chooseGraphSize(e.target.value as string)}
+                        >
+                            {graphSizeOptions.map((value) => {
+                                return <MenuItem key={value} value={value} style={{color: 'white'}}>{value}</MenuItem>
+                            })}
+                        </Select>
+                    </FormControl>
+                </div>
             </div>
+
         )
     }
 }
@@ -129,13 +172,21 @@ const mapStateToProps = (state: RootState, props: SearchControlProps) => ({
     searchAlgorithms: state && state.loadConfig && state.loadConfig.searching && state.loadConfig.searching.searchSettings
     && state.loadConfig.searching.searchSettings.algorithm && state.loadConfig.searching.searchSettings.algorithm.options,
     vertexList: state && state.graphDetails && state.graphDetails.vertexList,
-    chosenSearchAlgorithm: state && state.controlSettings && state.controlSettings.algorithm
+    chosenSearchAlgorithm: state && state.controlSettings && state.controlSettings.algorithm,
+    graphSize: state && state.controlSettings && state.controlSettings.graphSize,
+    isWeighted: state && state.controlSettings && state.controlSettings.isWeighted,
+    isDirected: state && state.controlSettings && state.controlSettings.isDirected,
+    graphSizeOptions: state && state.loadConfig && state.loadConfig.searching && state.loadConfig.searching.graphSettings
+    && state.loadConfig.searching.graphSettings.graphSizeOptions
 })
 
 const mapDispatchToProps = {
     chooseStartNode: ControlSettingsEventCreator.selectStartNode,
     chooseGoalNode: ControlSettingsEventCreator.selectGoalNode,
-    chooseSearchAlgorithm: ControlSettingsEventCreator.selectAlgorithm
+    chooseSearchAlgorithm: ControlSettingsEventCreator.selectAlgorithm,
+    chooseGraphSize: ControlSettingsEventCreator.selectGraphSize,
+    toggleWeighted: ControlSettingsEventCreator.toggleWeighted,
+    toggleDirected: ControlSettingsEventCreator.toggleDirected
 }
 
 const connectedComp = connect(

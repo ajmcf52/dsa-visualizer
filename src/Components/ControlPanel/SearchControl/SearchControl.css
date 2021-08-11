@@ -1,4 +1,4 @@
-.searchSettings {
+.settingsList {
     display: flex;
     align-items: flex-start;
     justify-content: flex-start;
@@ -6,6 +6,12 @@
     margin-bottom: 15px;
 }
 
-.MuiPaper-root {
-    background-color: lightblue;
+.controlsContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.MuiInputBase-input {
+    color: white;
 }

@@ -20,20 +20,11 @@
             }
         },
         "graphSettings": {
-            "graph size": {
-                "type": "radio",
-                "options": [
-                    "small",
-                    "medium",
-                    "large"
-                ]
-            },
-            "weighted": {
-                "type": "toggle"
-            },
-            "directed": {
-                "type": "toggle"
-            }
+            "graphSizeOptions":[
+                "small",
+                "medium",
+                "large"
+            ]
         }
     },
     "sorting": {
