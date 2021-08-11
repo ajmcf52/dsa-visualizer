@@ -3,15 +3,38 @@
     align-items: flex-start;
     justify-content: flex-start;
     flex-direction: column;
-    margin-bottom: 15px;
+    margin: -15px 25px 15px 15px;
+}
+
+.graphSettingsList {
+    margin-left: 75px;
 }
 
 .controlsContainer {
     display: flex;
     flex-direction: row;
-    justify-content: space-evenly;
+    justify-content: flex-start;
 }
 
-.MuiInputBase-input {
-    color: white;
+.checkBoxFlow {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    align-content: flex-start;
+}
+
+.buttonControls {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: flex-end;
+    position: relative;
+    bottom: 3px;
+}
+
+.containerFlow {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }

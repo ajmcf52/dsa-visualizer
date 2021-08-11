@@ -1,33 +1,33 @@
-import "./ControlPanel.css"
+import './ControlPanel.css'
 import TabControl from './TabControl'
 import SearchControl from './SearchControl'
 
 interface ControlPanelProps {
     algorithms: {
-        'searching': string[],
-        'sorting': string[]
+        searching: string[]
+        sorting: string[]
     }
-    selectedAlgorithmType: 'string',
-    selectedAlgorithm: number,
+    selectedAlgorithmType: 'string'
+    selectedAlgorithm: number
     controlSettings: {
-        'searching': {
-            startingNodeLabel: string,
-            endingNodeLabel: string,
-            graphSizeSelection: string,
-            directed: boolean,
+        searching: {
+            startingNodeLabel: string
+            endingNodeLabel: string
+            graphSizeSelection: string
+            directed: boolean
             weighted: boolean
-        },
-        'sorting': {}
+        }
+        sorting: {}
     }
 }
 
-function ControlPanel () {
-    return <div className='controlContainer'>
-        <div className='controlPanel'>
+function ControlPanel() {
+    return (
+        <div className='controlContainer'>
             <SearchControl />
+            <TabControl />
         </div>
-        <TabControl />
-    </div>
+    )
 }
 
-export default ControlPanel;
+export default ControlPanel

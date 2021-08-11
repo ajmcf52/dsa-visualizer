@@ -5,9 +5,9 @@ const initState = {
     startNode: '',
     goalNode: '',
     algorithm: '',
-    graphSize: 'small',
-    isWeighted: 'false',
-    isDirected: 'false'
+    graphSize: '',
+    isWeighted: true,
+    isDirected: true
 }
 
 export default function ControlSettingsReducer(state = initState, action: AnyAction) {

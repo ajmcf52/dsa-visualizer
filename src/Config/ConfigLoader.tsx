@@ -9,7 +9,7 @@ interface ConfigLoaderProps {
 
 class ConfigLoader extends React.Component<ConfigLoaderProps> {
     render() {
-        return <div />
+        return <div id='loader' />
     }
     componentDidMount() {
         this.props.loadConfig(data)
@@ -17,11 +17,7 @@ class ConfigLoader extends React.Component<ConfigLoaderProps> {
 }
 
 const mapDispatchToProps = {
-    loadConfig: LoadConfigActionCreator.dataRef
+    loadConfig: LoadConfigActionCreator.dataRef,
 }
 
-export default connect(
-    null,
-    mapDispatchToProps
-)(ConfigLoader)
-
+export default connect(null, mapDispatchToProps)(ConfigLoader)

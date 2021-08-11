@@ -1,3 +1,8 @@
+.tabContainer {
+    margin-top: -16px;
+    z-index: 0;
+}
+
 .tabRow {
     text-align: center;
     list-style: none;
@@ -10,7 +15,7 @@
 }
 
 .tabRow li {
-    border: 1px solid #AAA;
+    border: 1px solid #aaa;
     background: #d1d1d1;
     display: inline-block;
     font-size: 24px;
@@ -18,8 +23,8 @@
     z-index: 0;
     border-bottom-left-radius: 6px;
     border-bottom-right-radius: 6px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.4);
-    text-shadow: 0 1px #FFF;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+    text-shadow: 0 1px #fff;
     margin: 0px -5px;
     padding: 1px 15px;
 }
@@ -29,30 +34,30 @@
 }
 
 .tabRow li.selected {
-    background: #FFF;
+    background: #fff;
     color: #333;
     z-index: 2;
-    border-top-color: #FFF;
+    border-top-color: #fff;
 }
 
 .tabRow:before {
     position: absolute;
-    content: "";
+    content: '';
     width: 100%;
     top: 0;
     left: 0;
-    border-top: 1px solid #AAA;
+    border-top: 1px solid #aaa;
     z-index: 1;
 }
 
 .tabRow li:before,
 .tabRow li:after {
-    border: 1px solid #AAA;
+    border: 1px solid #aaa;
     position: absolute;
     top: -1px;
     width: 6px;
     height: 6px;
-    content: "";
+    content: '';
 }
 
 .tabRow li:before {
@@ -70,9 +75,9 @@
 }
 
 .tabRow li.selected:before {
-    box-shadow: 5px 0px 0px #FFF;
+    box-shadow: 5px 0px 0px #fff;
 }
 
 .tabRow li.selected:after {
-    box-shadow: -5px 0px 0px #FFF;
+    box-shadow: -5px 0px 0px #fff;
 }
