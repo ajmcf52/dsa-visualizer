@@ -1,9 +1,9 @@
-import { GraphEventType } from "../Actions/GraphEvent";
-import { AnyAction } from "redux";
+import { GraphEventType } from '../Actions/GraphEvent'
+import { AnyAction } from 'redux'
 
 const initState = {
     vertexList: [],
-    adjMap: {}
+    adjMap: {},
 }
 
 export default function GraphReducer(state = initState, action: AnyAction) {
@@ -11,12 +11,17 @@ export default function GraphReducer(state = initState, action: AnyAction) {
         case GraphEventType.vertexListPush:
             return {
                 ...state,
-                vertexList: action.vertexList
+                vertexList: action.vertexList,
             }
         case GraphEventType.adjMapPush:
             return {
                 ...state,
-                adjMap: action.adjMap
+                adjMap: action.adjMap,
+            }
+        case GraphEventType.startSolution:
+            return {
+                ...state,
+                solveGraph: true,
             }
         default:
             return state

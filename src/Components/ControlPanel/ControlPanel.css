@@ -1,13 +1,3 @@
-.controlPanel {
-    min-height: 100%;
-    background-color: #7aadff;
-    z-index: -1;
-    border-radius: 4px;
-    margin: 10px;
-    display: flex;
-    flex-direction: column;
-}
-
 .controlContainer {
     min-height: 30%;
     display: flex;
@@ -15,4 +5,5 @@
     background-color: #7aadff;
     border-radius: 4px;
     margin: 10px 10px 0px 10px;
+    z-index: 1;
 }
