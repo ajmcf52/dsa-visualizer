@@ -2,6 +2,7 @@ import './SearchControl.css'
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
 import { ControlSettingsEventCreator } from '../../../Actions/ControlSettingsEvent'
+import { GraphEventCreator } from '../../../Actions/GraphEvent'
 import {
     FormControl,
     InputLabel,
@@ -72,6 +73,7 @@ interface SearchControlProps {
     chooseGraphSize: (graphSize: string) => {}
     toggleWeighted: (isWeighted: boolean) => {}
     toggleDirected: (isDirected: boolean) => {}
+    beginSolving: () => {}
     vertexList: string[]
     searchAlgorithms: string[]
     chosenSearchAlgorithm: string
@@ -89,6 +91,7 @@ const SearchControl = (props: SearchControlProps) => {
         chooseGraphSize,
         toggleWeighted,
         toggleDirected,
+        beginSolving,
         vertexList,
         searchAlgorithms,
         chosenSearchAlgorithm,
@@ -324,6 +327,9 @@ const SearchControl = (props: SearchControlProps) => {
                     <Button
                         className={classes.controlButton}
                         variant='contained'
+                        onClick={() => {
+                            beginSolving()
+                        }}
                     >
                         Start
                     </Button>
@@ -371,6 +377,7 @@ const mapDispatchToProps = {
     chooseGraphSize: ControlSettingsEventCreator.selectGraphSize,
     toggleWeighted: ControlSettingsEventCreator.toggleWeighted,
     toggleDirected: ControlSettingsEventCreator.toggleDirected,
+    beginSolving: GraphEventCreator.startSolution,
 }
 
 const connectedComp = connect(

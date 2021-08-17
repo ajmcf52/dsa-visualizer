@@ -1,9 +1,11 @@
-import React from 'react'
-import { AdjacencyMap } from '../../Factory/GraphFactory'
-import PriorityQueue from './PriorityQueue'
-import Graph from '../Graph'
-import animateTraversal from '../Graph'
-import animateVisit from '../Graph'
+import React from 'react';
+import { AdjacencyMap } from '../../Factory/GraphFactory';
+import PriorityQueue from './PriorityQueue';
+import Graph from '../Graph';
+import { animateTraversal, animateVisit } from '../Graph/Graph';
+import { RootState } from '../../store';
+import { connect } from 'react-redux';
+import { GraphEventCreator } from '../../Actions/GraphEvent';
 
 /**
  * pseudocode:
@@ -28,70 +30,106 @@ import animateVisit from '../Graph'
  */
 
 interface DjikstraSolverProps {
-    G: AdjacencyMap
-    graph: InstanceType<typeof Graph>
-    start: string
-    end: string
+    G: AdjacencyMap;
+    graph: React.RefObject<InstanceType<typeof Graph>>;
+    start?: string;
+    end?: string;
+    solvingStarted?: boolean;
+    animateEdge: (edgeId: string) => {};
+    animateNode: (nodeId: string) => {};
 }
 
 interface DjikstraSolverState {}
 
-export class DjikstraSolver extends React.Component<
+class DjikstraSolver extends React.Component<
     DjikstraSolverProps,
     DjikstraSolverState
 > {
+    render() {
+        // TODO render a visual priority queue.
+        return <div />;
+    }
+    componentDidUpdate() {
+        console.log('update');
+        let { solvingStarted, start, end } = this.props;
+        if (solvingStarted && start && end) {
+            this.run();
+        }
+    }
     run() {
-        let { G, graph, start, end } = this.props
-        let unvisited = new Set<string>()
-        let distances: { [id: string]: number } = {}
+        console.log('running');
+        let { G, start, end, animateEdge, animateNode } = this.props;
+        let unvisited = new Set<string>();
+        let distances: { [id: string]: number } = {};
         G.edgeLists.forEach((value, key) => {
             if (key === start) {
-                distances[key] = 0
+                distances[key] = 0;
             } else {
-                distances[key] = Number.POSITIVE_INFINITY
+                distances[key] = Number.POSITIVE_INFINITY;
             }
-            unvisited.add(key)
-        })
-        let pq: PriorityQueue = new PriorityQueue()
-        pq.add(start, 0, '-')
-        let prevCurrent = null
+            unvisited.add(key);
+        });
+        let pq: PriorityQueue = new PriorityQueue();
+        pq.add(start!, 0, '-');
+        let prevCurrent = null;
         while (!pq.isEmpty()) {
-            let current = pq.removeHead()!
+            let current = pq.removeHead()!;
 
             if (prevCurrent) {
                 G.edgeLists
                     .get(prevCurrent.id)!
                     .filter((value) => value.to === current.id)
                     .forEach((value) => {
-                        animateTraversal(graph, value.edgeId)
-                    })
+                        animateEdge(value.edgeId);
+                        //animateTraversal(graph.current, value.edgeId);
+                    });
             }
-            animateVisit(graph, current.id)
+            animateNode(current.id);
+            //animateVisit(graph.current, current.id);
 
             if (current.id === end) {
                 // we're done!
                 // TODO add in visual backtracking of the shortest path found
-                return 'success'
+                return 'success';
             }
             // we only want to process edges to nodes that are still unvisited
             G.edgeLists
                 .get(current.id)!
                 .filter((value) => unvisited.has(value.to))
                 .forEach((value) => {
-                    let costToNeighbor = distances[current.id] + value.weight
+                    let costToNeighbor = distances[current.id] + value.weight;
                     if (distances[value.to] === Number.POSITIVE_INFINITY) {
-                        distances[value.to] = costToNeighbor
+                        distances[value.to] = costToNeighbor;
                         // TODO add in an animation here
-                        pq.add(value.to, costToNeighbor, current.id)
+                        pq.add(value.to, costToNeighbor, current.id);
                     } else if (distances[value.to] > costToNeighbor) {
-                        distances[value.to] = costToNeighbor
+                        distances[value.to] = costToNeighbor;
                         // TODO add in an animation here
-                        pq.setCostOf(value.to, costToNeighbor, current.id)
+                        pq.setCostOf(value.to, costToNeighbor, current.id);
                     }
-                })
+                });
             // mark the node that we have visited
-            unvisited.delete(current.id)
-            prevCurrent = current
+            unvisited.delete(current.id);
+            prevCurrent = current;
         }
     }
 }
+
+const mapStateToProps = (state: RootState, props: DjikstraSolverProps) => ({
+    start: state && state.controlSettings && state.controlSettings.startNode,
+    end: state && state.controlSettings && state.controlSettings.goalNode,
+    solvingStarted:
+        state && state.graphDetails && state.graphDetails.solveGraph,
+});
+
+const mapDispatchToProps = {
+    animateEdge: GraphEventCreator.animateEdge,
+    animateNode: GraphEventCreator.animateNode,
+};
+
+const connectedComp = connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(DjikstraSolver);
+
+export default connectedComp;
